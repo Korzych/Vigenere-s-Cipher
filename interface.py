@@ -255,7 +255,7 @@ class Window(QMainWindow):
 app = QApplication(sys.argv)
 
 window = Window()
-window.setFixedSize(1000,600)
+window.setFixedSize(700,400)
 window.setStyleSheet("background-color: rgb(0,42,92);")
 #window.setStyleSheet("background-color: pink;")
 window.show()
