@@ -1,41 +1,32 @@
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-
-from tkinter import filedialog 
-   
-import  sys,tkinter,re
-
+from tkinter import filedialog   
+import  sys,tkinter,re,random
 root = tkinter.Tk()
 root.withdraw()
 filePath = ""
 class VTableEng:
     def __init__(self):
-        self.alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ĄĆĘŁŃÓŚŹŻabcdefghijklmnopqrstuvwxyząćęłńóśźż.,-?\n :"
-        #"ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ĄĆĘŁŃÓŚŹŻ.,-?: "
-        self.chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ĄĆĘŁŃÓŚŹŻabcdefghijklmnopqrstuvwxyząćęłńóśźż.,-?\n :"
+        self.alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ĄĆĘŁŃÓŚŹŻabcdefghijklmnopqrstuvwxyząćęłńóśźż.,-?!;()\n :"
+        self.chars="ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890ĄĆĘŁŃÓŚŹŻabcdefghijklmnopqrstuvwxyząćęłńóśźż.,-?!;()\n :"
         self.table = ["" for i in range(len(self.chars))]
         
     def create(self):
-        ran=False
         print("Rozmiar alfabetu: "+ str(len(self.chars))+"\n")
         for i,a in enumerate(self.table):
             
-          #  if self.chars[0]=='A' and ran==True:
-           #     break
             if self.table[0]=="":
                self.table[i]=self.chars   
-              # print(self.table[i]+".\n")
+            
             else:
-                ran = True
                 c=self.chars[0]
                 self.chars =self.chars.replace(c,'')
                 self.chars= self.chars+ c
                 self.table[i]=self.chars
-              #  print(self.table[i]+".\n")
+              
     def encode(self,tekst,kod):
-        #tekst=tekst.upper()
-        #kod=kod.upper()
+       
         while len(tekst)!=len(kod):
             if len(tekst)<len(kod):
                 while len(tekst)<len(kod):
@@ -50,8 +41,7 @@ class VTableEng:
             encoded=encoded+c
         return encoded
     def decode(self,encoded,kod):
-        #encoded=encoded.upper()
-        #kod=kod.upper()
+       
         while len(encoded)!=len(kod):
             if len(encoded)<len(kod):
                 while len(encoded)<len(kod):
@@ -68,78 +58,86 @@ class VTableEng:
             c=self.table[0][alp.find(a)]
             decoded=decoded+c
         return decoded
+    
 
 class Window(QMainWindow):
         def __init__(self, *args, **kwargs):
                 self.obj = VTableEng()
                 self.obj.create()
                 super(Window, self).__init__(*args, *kwargs)
-                self.setWindowTitle("Encryption Machine")
+                self.setWindowTitle("Szyfr Vigenere'a")
                 #Tytułowy
                 titleText = QLabel()
-                titleText.setText("This is your Encryption Machine")
+                titleText.setText("Szyfr Vigenere'a")
                 titleText.setAlignment(Qt.AlignCenter)
                 titleText.setStyleSheet("QLabel { color : rgb(178,183,187) ;}")
-                titleText.setFont(QFont('Capriola',35))
+                titleText.setFont(QFont('Capriola',40))
 
                 self.firstText=QLabel()
-                self.firstText.setText("Enter message to encrypt")
+                self.firstText.setText("Wpisz wiadomość do zaszyfrowania")
                 self.firstText.setStyleSheet("QLabel { color : rgb(122,193,66) ;}")
                 self.firstText.setAlignment(Qt.AlignCenter)
-                self.firstText.setFont(QFont('Capriola',20))
+                self.firstText.setFont(QFont('Capriola',25))
                 #Pole tekstowe 
                 self.firstMessage = QLineEdit()
-                self.firstMessage.setPlaceholderText("Enter Message")
+                self.firstMessage.setPlaceholderText("Wiadomość")
                 self.firstMessage.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
                 self.firstMessage.setFont(QFont('Arial',15))
                 #Pole klucza
                 self.enckey = QLineEdit()
-                self.enckey.setPlaceholderText("Enter key")
+                self.enckey.setPlaceholderText("Klucz")
                 self.enckey.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
                 self.enckey.setFont(QFont('Arial',15))
                 #Pole Directory
                 self.fDir = QLineEdit()
-                self.fDir.setPlaceholderText("File Directory")
+                self.fDir.setPlaceholderText("Ścieżka pliku")
                 self.fDir.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
                 self.fDir.setFont(QFont('Arial',15))
                 #Pole Zaszyfrowane
                 self.encText = QLineEdit()
-                self.encText.setPlaceholderText("Encrypted Text")
+                self.encText.setPlaceholderText("Zaszyfrowany tekst")
                 self.encText.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
                 self.encText.setFont(QFont('Arial',15))
                 #Pole Odszyfrowane 
                 self.decText = QLineEdit()
-                self.decText.setPlaceholderText("Decrypted Text")
+                self.decText.setPlaceholderText("Odszyfrowany tekst")
                 self.decText.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
                 self.decText.setFont(QFont('Arial',15))
               
                 #Szyfrowanie
                 encryptButton = QPushButton()
-                encryptButton.setText("Encrypt")
+                encryptButton.setText("Szyfruj")
                 encryptButton.clicked.connect(self.encryptClick)
                 encryptButton.setFont(QFont('Impact',15))
                 encryptButton.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
             
                 #Deszyfrowanie
                 decryptButton = QPushButton()
-                decryptButton.setText("Decrypt")
+                decryptButton.setText("Odszyfruj")
                 decryptButton.clicked.connect(self.decryptClick)
                 decryptButton.setFont(QFont('Impact',15))
                 decryptButton.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
 
                 #Wybór pliku
                 selectButton = QPushButton()
-                selectButton.setText("CHOOSE FILE")
+                selectButton.setText("Wybierz plik")
                 selectButton.clicked.connect(self.selectClick)
                 selectButton.setFont(QFont('Impact',15))
                 selectButton.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
 
                 #Przycisk zapisu
                 saveButton = QPushButton()
-                saveButton.setText("Save File")
+                saveButton.setText("Zapisz Plik")
                 saveButton.clicked.connect(self.saveClick)
                 saveButton.setFont(QFont('Impact',15))
                 saveButton.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
+
+                #Przycisk zapisu
+                readEncButton = QPushButton()
+                readEncButton.setText("Zaszyfrowany tekst")
+                readEncButton.clicked.connect(self.openEncrypted)
+                readEncButton.setFont(QFont('Impact',15))
+                readEncButton.setStyleSheet("  background-color : rgb(178,183,187);color : rgb(0,42,92);")
 
                 #Help button
                 self.helpButton = QPushButton()
@@ -164,6 +162,7 @@ class Window(QMainWindow):
 
                 #Layout pola wiadomości i klucza
                 textLayout1 = QHBoxLayout()
+                textLayout1.addWidget(encryptButton)
                 textLayout1.addWidget(self.enckey)
                 textLayoutWid1=QWidget()
                 textLayoutWid1.setLayout(textLayout1)
@@ -185,7 +184,7 @@ class Window(QMainWindow):
                 dirLayWid.setLayout(dirLayout)
                 #Layout Zaszyfrowanego i szyfruj
                 encLayout= QHBoxLayout()
-                encLayout.addWidget(encryptButton)
+                encLayout.addWidget(readEncButton)
                 encLayout.addWidget(self.encText)
                 encLayoutWid1= QWidget()
                 encLayoutWid1.setLayout(encLayout)
@@ -199,7 +198,6 @@ class Window(QMainWindow):
                 mainMenu.addWidget(selectLayoutW)
                
                 mainMenu.addWidget(dirLayWid)
-               
                 mainMenu.addWidget(textLayoutWid1)
                 mainMenuWid= QWidget()
                 mainMenuWid.setLayout(mainMenu)
@@ -208,59 +206,115 @@ class Window(QMainWindow):
                 
                 self.setCentralWidget(mainMenuWid)
 
+   
         def helpClick(self):    
-            print("HELP")  
-
+            info= QMessageBox()
+            info.setWindowTitle("Info")
+            info.setStyleSheet("QMessageBox{background-color : white}")
+            info.setText("Autor: Krzysztof Sułkowski\nIndeks: 140785\n\nAlgorytm Vigenere'a\nAlgorytm Vigenere'a jest algorytmem z grupy algorytmów polialfabetycznych. Prezentowany program opiera się na algorytmie szyfrowania opartym na tablicy. \nPrzykładowa tablica: \n\n\t A B C D E \tSzyfrowane hasło: B A C A\n\t B C D E A \tKlucz szyfrowania: C E D E \n\t C D E A B \tZaszyfrowane hasło: D E A E\n\t D E A B C\n\t E A B C D"+
+            "\n\nW poziomie wyszukiwany jest kolejno każdy znak szyfrowanego hasła. W pionie wyszukiwany jest kolejno każdy znak szyfru. Zaszyfrowane hasło powstaje w wyniku odczytania znaków znajdujących się w miejscu przecięcia odpowiadających sobie znaków hasła i klucza. \n\nZaimplementowany program pozwala na wpisanie treści wiadomości lub wczytanie jej z pliku tekstowego. Klucz szyfrowania można wpisać ręcznie lub wygenerować go automatycznie. Zaszyfrowane hasło można zapisać do pliku tekstowego. Alfabet obejmuje małe i wielkie litery alfabetu polskiego, cyfry oraz podstawowe znaki interpunkcyjne.")  
+           # info.setFont(QFont("Arial",13))
+            info.exec_()              
         def encryptClick(self):
             
             if len(self.enckey.text())==0:
-                info= QMessageBox.about(self,"Error","Key too short")
-            elif len(self.firstMessage.text())==0:
-                info= QMessageBox.about(self,"Error","Message too short")
-            else:
-                self.encText.setText(self.obj.encode(self.firstMessage.text(),self.enckey.text()))
-            #enkrypcja
+                info= QMessageBox()
+                info.setWindowTitle("Błąd")
+                info.setText("Zbyt krótki klucz. Wygenerować nowy?")
+                info.setStyleSheet("QMessageBox{background-color : white}")
+                info.addButton("Generuj", QMessageBox.YesRole) 
+                info.addButton("Anuluj", QMessageBox.NoRole)
+                #info.question(self, 'Błąd klucza', "Niepoprawny klucz. Wygenerować nowy?", info.Yes | info.No, info.No)
+                result=info.exec()
+                if result==0:
+                    print("Hello")
+                    self.enckey.setText(self.randomKey(self.obj.alphabet))
+                
 
+            elif len(self.firstMessage.text())==0:
+                info= QMessageBox()
+                info.setWindowTitle("Błąd")
+                info.setText("Wiadomość za krótka")
+                info.setStyleSheet("QMessageBox{background-color : white}")
+                info.exec()
+                
+            else:
+                text=self.enckey.text()
+                ran=True
+                for i in range (len(text)):
+                    if text[i] not in self.obj.alphabet:
+                        info= QMessageBox()
+                        info.setWindowTitle("Błąd")
+                        info.setText("Błędny alfabet klucza.")
+                        info.setStyleSheet("QMessageBox{background-color : white}")
+                        info.exec()
+                        ran=False
+                        break
+                       
+                text=self.firstMessage.text()
+                for i in range (len(text)):
+                    if text[i] not in self.obj.alphabet:
+                        info= QMessageBox()
+                        info.setWindowTitle("Błąd")
+                        info.setText("Błędny alfabet wiadomości.")
+                        info.setStyleSheet("QMessageBox{background-color : white}")
+                        info.exec()
+                        ran=False
+                        break
+                        
+                if ran==True:
+                    self.encText.setText(self.obj.encode(self.firstMessage.text(),self.enckey.text()))         
+        def randomKey(self,alphabet):
+            key=""
+            for i in range(10):
+                key=key+alphabet[random.randint(0,len(alphabet))]
+            return key   
         def decryptClick(self):
            self.decText.setText(self.obj.decode(self.encText.text(),self.enckey.text()))
-        
-         #znaki spoza alfabetu 
-           
-
-
         def selectClick(self):
             filePath = filedialog.askopenfilename()
             if(len(filePath)>0):
                 self.fDir.setText(filePath)
                 f=open(filePath, "r",encoding="utf8")
                 self.firstMessage.setText(f.read())
+                f.close()
         def saveClick(self):
             d=  self.fDir.text()
             c=len(d)
             if (c<1):
-               
-                info= QMessageBox.about(self,"Error","Filename is too short")
+                info= QMessageBox()
+                info.setWindowTitle("Błąd")
+                info.setText("Niepoprawna nazwa pliku")
+                info.setStyleSheet("QMessageBox{background-color : white}")
+                info.exec()
             elif (d[c-1]=='/'):
-                info= QMessageBox.about(self,"Error","Invalid Filename")   
-                #Dodać obsługę błędu
+                info= QMessageBox()
+                info.setWindowTitle("Błąd")
+                info.setText("Niepoprawna nazwa pliku ")
+                info.setStyleSheet("QMessageBox{background-color : white}")
+                info.exec()
             else:
-                a=self.firstMessage.text()
-                f = open(d, "w")
+                a=self.encText.text()
+                f = open(d, "w",encoding="utf8")
                 f.write(a)
                 f.close()
-            
-
+        def openEncrypted(self):
+            filePath = filedialog.askopenfilename()
+            if(len(filePath)>0):
+                f=open(filePath, "r",encoding="utf8")
+                self.encText.setText(f.read())
+                f.close()
+        
 #
 
 app = QApplication(sys.argv)
 
 window = Window()
-window.setFixedSize(700,400)
+window.setFixedSize(900,500)
 window.setStyleSheet("background-color: rgb(0,42,92);")
 #window.setStyleSheet("background-color: pink;")
 window.show()
 
 app.exec()
-'''Szyfr vigenere'a 
-'''
+
 
